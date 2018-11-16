@@ -1,0 +1,16 @@
+.key {
+  background-color: #ffffce;
+  border: 5px solid #ffffff;
+  font-size: 1.5em;
+  cursor: pointer;
+  width: 25%;
+}
+
+.key:hover {
+  background-color: #e6ee9c;
+  font-weight: bold;
+}
+
+.key:active {
+  background-color: #b3bc6d;
+}
