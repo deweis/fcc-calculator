@@ -12,9 +12,15 @@ const keypad = props => {
         <td className="key">*</td>
       </tr>
       <tr>
-        <td className="key">7</td>
-        <td className="key">8</td>
-        <td className="key">9</td>
+        <td className="key" onClick={() => props.clicked(7)}>
+          7
+        </td>
+        <td className="key" onClick={() => props.clicked(8)}>
+          8
+        </td>
+        <td className="key" onClick={() => props.clicked(9)}>
+          9
+        </td>
         <td className="key">/</td>
       </tr>
       <tr>
