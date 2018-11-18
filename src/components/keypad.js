@@ -12,32 +12,46 @@ const keypad = props => {
         <td className="key">*</td>
       </tr>
       <tr>
-        <td className="key" onClick={() => props.clicked(7)}>
+        <td className="key" onClick={() => props.numberclicked(7)}>
           7
         </td>
-        <td className="key" onClick={() => props.clicked(8)}>
+        <td className="key" onClick={() => props.numberclicked(8)}>
           8
         </td>
-        <td className="key" onClick={() => props.clicked(9)}>
+        <td className="key" onClick={() => props.numberclicked(9)}>
           9
         </td>
         <td className="key">/</td>
       </tr>
       <tr>
-        <td className="key">4</td>
-        <td className="key">5</td>
-        <td className="key">6</td>
+        <td className="key" onClick={() => props.numberclicked(4)}>
+          4
+        </td>
+        <td className="key" onClick={() => props.numberclicked(5)}>
+          5
+        </td>
+        <td className="key" onClick={() => props.numberclicked(6)}>
+          6
+        </td>
         <td className="key">+</td>
       </tr>
       <tr>
-        <td className="key">1</td>
-        <td className="key">2</td>
-        <td className="key">3</td>
+        <td className="key" onClick={() => props.numberclicked(1)}>
+          1
+        </td>
+        <td className="key" onClick={() => props.numberclicked(2)}>
+          2
+        </td>
+        <td className="key" onClick={() => props.numberclicked(3)}>
+          3
+        </td>
         <td className="key">-</td>
       </tr>
       <tr>
         <td className="key">-</td>
-        <td className="key">0</td>
+        <td className="key" onClick={() => props.numberclicked(0)}>
+          0
+        </td>
         <td className="key">.</td>
         <td className="key">=</td>
       </tr>

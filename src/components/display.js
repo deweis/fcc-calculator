@@ -7,7 +7,7 @@ const display = props => {
     <Aux>
       <tr className="display display-main">
         <th colSpan="4" id="display">
-          {props.current_number}
+          {/* {props.current_number} */}
         </th>
       </tr>
       <tr className="display display-calc">

@@ -6,9 +6,16 @@ import KeyPad from './components/keypad';
 class App extends Component {
   state = { current_number: 0 };
 
-  clickHandler = item => {
+  numberClickHandler = number => {
+    let arr =
+      this.state.current_number === 0 && number === 0
+        ? [0]
+        : this.state.current_number === 0 && number > 0
+        ? [number]
+        : [this.state.current_number, number];
+
     this.setState({
-      current_number: item
+      current_number: Number(arr.join(''))
     });
   };
 
@@ -19,7 +26,7 @@ class App extends Component {
           <table className="table">
             <tbody>
               <Display current_number={this.state.current_number} />
-              <KeyPad clicked={this.clickHandler} />
+              <KeyPad numberclicked={this.numberClickHandler} />
             </tbody>
           </table>
         </div>
