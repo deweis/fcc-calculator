@@ -6,7 +6,9 @@ const keypad = props => {
   return (
     <Aux>
       <tr>
-        <td className="key">AC</td>
+        <td className="key" onClick={props.acClicked}>
+          AC
+        </td>
         <td className="key">CE</td>
         <td className="key" />
         <td className="key">*</td>

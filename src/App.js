@@ -19,6 +19,10 @@ class App extends Component {
     });
   };
 
+  acClickHandler = () => {
+    this.setState({ current_number: 0 });
+  };
+
   render() {
     return (
       <div className="App container">
@@ -26,7 +30,10 @@ class App extends Component {
           <table className="table">
             <tbody>
               <Display current_number={this.state.current_number} />
-              <KeyPad numberclicked={this.numberClickHandler} />
+              <KeyPad
+                numberclicked={this.numberClickHandler}
+                acClicked={this.acClickHandler}
+              />
             </tbody>
           </table>
         </div>
