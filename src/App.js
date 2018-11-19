@@ -3,6 +3,13 @@ import './App.css';
 import Display from './components/display';
 import KeyPad from './components/keypad';
 
+/*
+  - Add CE functionality
+  - Add Calculation functionality (final calculation and calculation upon partial results)
+  - Add Decimal functionality
+  - Fix too long enterings widen the calculator
+*/
+
 class App extends Component {
   state = {
     current_item: 0,
