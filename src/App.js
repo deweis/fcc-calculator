@@ -9,13 +9,14 @@ class App extends Component {
     current_calculation: []
   };
 
+  /* When a number has been clicked */
   numberClickHandler = number => {
     let arr =
       this.state.current_number === 0 && number === 0
-        ? [0]
+        ? [0] // can't type more than one zero at the beginning of a number
         : this.state.current_number === 0 && number > 0
-        ? [number]
-        : [this.state.current_number, number];
+        ? [number] // first number >0 is ok
+        : [this.state.current_number, number]; // add numbers to the array
 
     const current_number = Number(arr.join(''));
 
@@ -25,6 +26,7 @@ class App extends Component {
     });
   };
 
+  /* When the AC has been clicked */
   acClickHandler = () => {
     this.setState({ current_number: 0, current_calculation: [] });
   };
