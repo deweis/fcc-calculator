@@ -12,7 +12,7 @@ const display = props => {
       </tr>
       <tr className="display display-calc">
         <th colSpan="4" id="displayCalc">
-          {props.current_number}
+          {props.current_item}
         </th>
       </tr>
     </Aux>

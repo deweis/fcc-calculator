@@ -5,30 +5,46 @@ import KeyPad from './components/keypad';
 
 class App extends Component {
   state = {
-    current_number: 0,
+    current_item: 0,
     current_calculation: []
   };
 
   /* When a number has been clicked */
   numberClickHandler = number => {
     let arr =
-      this.state.current_number === 0 && number === 0
+      this.state.current_item === 0 && number === 0
         ? [0] // can't type more than one zero at the beginning of a number
-        : this.state.current_number === 0 && number > 0
-        ? [number] // first number >0 is ok
-        : [this.state.current_number, number]; // add numbers to the array
+        : this.state.current_item === 0 && number > 0
+        ? [number] // first number > 0 is ok
+        : [this.state.current_item, number]; // add numbers to the array
 
-    const current_number = Number(arr.join(''));
+    const current_item = Number(arr.join(''));
 
     this.setState({
-      current_number: current_number,
-      current_calculation: current_number
+      current_item: current_item,
+      current_calculation: [current_item]
+    });
+  };
+
+  /* When a operator has been clicked */
+  operatorClickHandler = operator => {
+    let current_calculation = [...this.state.current_calculation];
+    // first operator typed
+    if (typeof this.state.current_item === 'number') {
+      current_calculation.push(operator);
+      // another operator typed - replaces the first operator
+    } else if (typeof this.state.current_item === 'string') {
+      current_calculation.splice(current_calculation.length - 1, 1, operator);
+    }
+    this.setState({
+      current_item: operator,
+      current_calculation: current_calculation
     });
   };
 
   /* When the AC has been clicked */
   acClickHandler = () => {
-    this.setState({ current_number: 0, current_calculation: [] });
+    this.setState({ current_item: 0, current_calculation: [] });
   };
 
   render() {
@@ -38,11 +54,12 @@ class App extends Component {
           <table className="table">
             <tbody>
               <Display
-                current_number={this.state.current_number}
+                current_item={this.state.current_item}
                 current_calculation={this.state.current_calculation}
               />
               <KeyPad
-                numberclicked={this.numberClickHandler}
+                numberClicked={this.numberClickHandler}
+                operatorClicked={this.operatorClickHandler}
                 acClicked={this.acClickHandler}
               />
             </tbody>
