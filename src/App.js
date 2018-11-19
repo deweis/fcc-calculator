@@ -11,18 +11,33 @@ class App extends Component {
 
   /* When a number has been clicked */
   numberClickHandler = number => {
-    let arr =
-      this.state.current_item === 0 && number === 0
-        ? [0] // can't type more than one zero at the beginning of a number
-        : this.state.current_item === 0 && number > 0
-        ? [number] // first number > 0 is ok
-        : [this.state.current_item, number]; // add numbers to the array
+    let current_calculation = [...this.state.current_calculation];
+    let current_item = this.state.current_item;
 
-    const current_item = Number(arr.join(''));
+    // first number or an additional number after another number has been typed
+    if (typeof this.state.current_item === 'number') {
+      let arr =
+        this.state.current_item === 0 && number === 0
+          ? [0] // can't type more than one zero at the beginning of a number
+          : this.state.current_item === 0 && number > 0
+          ? [number] // first number > 0 is ok
+          : [this.state.current_item, number]; // add numbers to the array
+
+      current_item = Number(arr.join(''));
+      current_calculation.splice(
+        current_calculation.length - 1,
+        1,
+        current_item
+      );
+      // first number after an operator
+    } else if (typeof this.state.current_item === 'string') {
+      current_item = number;
+      current_calculation.push(number);
+    }
 
     this.setState({
       current_item: current_item,
-      current_calculation: [current_item]
+      current_calculation: current_calculation
     });
   };
 
