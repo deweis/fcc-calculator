@@ -4,7 +4,7 @@ import Display from './components/display';
 import KeyPad from './components/keypad';
 
 /*
-  - Add CE functionality
+  - ID user stories - Ids
   - Add Calculation functionality (final calculation and calculation upon partial results)
   - Add Decimal functionality
   - Fix too long enterings widen the calculator
@@ -69,6 +69,22 @@ class App extends Component {
     this.setState({ current_item: 0, current_calculation: [] });
   };
 
+  /* When the CE has been clicked */
+  ceClickHandler = () => {
+    let current_calculation = [...this.state.current_calculation];
+    if (current_calculation.length === 1) {
+      this.setState({ current_item: 0, current_calculation: [] });
+    } else if (
+      typeof current_calculation[current_calculation.length - 1] === 'number'
+    ) {
+      current_calculation.pop();
+      this.setState({
+        current_item: current_calculation[current_calculation.length - 1],
+        current_calculation: current_calculation
+      });
+    }
+  };
+
   render() {
     return (
       <div className="App container">
@@ -83,6 +99,7 @@ class App extends Component {
                 numberClicked={this.numberClickHandler}
                 operatorClicked={this.operatorClickHandler}
                 acClicked={this.acClickHandler}
+                ceClicked={this.ceClickHandler}
               />
             </tbody>
           </table>
