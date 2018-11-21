@@ -3,16 +3,20 @@ import Aux from '../hoc/Aux_/Aux_';
 import './display.css';
 
 const display = props => {
+  /* Make the font-size smaller the longer the calculation gets to stay within the display size */
+  const calcLength = props.current_calculation.join('').length;
+  const fontSizes =
+    calcLength < 16 ? 2.4 : calcLength < 20 ? 2.0 : calcLength < 25 ? 1.5 : 1.0;
+  const styles = { fontSize: `${fontSizes}em` };
+
   return (
     <Aux>
-      <tr className="display display-main">
-        <th colSpan="4" id="display">
-          {props.current_calculation}
-        </th>
-      </tr>
-      <tr className="display display-calc">
-        <th colSpan="4" id="displayCalc">
-          {props.current_item}
+      <tr>
+        <th colSpan="4" id="display" className="display">
+          <p className="display-main" style={styles}>
+            {props.current_calculation}
+          </p>
+          <p className="display-calc">{props.current_item}</p>
         </th>
       </tr>
     </Aux>
