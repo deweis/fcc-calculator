@@ -4,7 +4,6 @@ import Display from './components/display';
 import KeyPad from './components/keypad';
 
 /*
-  - Create a recursive function to handle one operator and update the current_calculation for all appearances of that operator
   - ID user stories - Ids
   - Add Calculation functionality (final calculation and calculation upon partial results)
   - Add Decimal functionality
@@ -97,6 +96,29 @@ class App extends Component {
     return result;
   };
 
+  /* Helper function (recursive) to calculate all operations for one operator */
+  reduceOperator = (calculation, operator) => {
+    if (calculation.includes(operator)) {
+      // Extract a single calculation for the operator
+      let calcTmp = calculation.slice(
+        calculation.indexOf(operator) - 1,
+        calculation.indexOf(operator) + 2
+      );
+
+      // Calculate this operation
+      let resultTmp = this.calculate(calcTmp[0], calcTmp[1], calcTmp[2]);
+
+      // Add the result to the main calculation
+      calculation.splice(calculation.indexOf(operator) - 1, 3, resultTmp);
+
+      // Look out for the next appearance of that operator
+      this.reduceOperator(calculation, operator);
+    } else {
+      return calculation;
+    }
+    return calculation;
+  };
+
   /* When the equal sign has been clicked */
   resultClickHandler = () => {
     // first a number has to be typed before an operator can be used
@@ -111,31 +133,37 @@ class App extends Component {
     let currentCalculation = [...this.state.current_calculation];
     let result = [...currentCalculation];
 
-    currentCalculation = this.addOperator(currentCalculation, '=');
-
-    console.log('Current Calculation', currentCalculation);
-    console.log('Result', result);
-
-    // calculate a multiplication
+    // calculate the multiplications
     if (result.includes('*')) {
-      let calcTmp = result.slice(
-        result.indexOf('*') - 1,
-        result.indexOf('*') + 2
-      );
-      let resultTmp = this.calculate(calcTmp[0], calcTmp[1], calcTmp[2]);
-      console.log('Result: ' + resultTmp);
-      result.splice(result.indexOf('*') - 1, 3, resultTmp);
-      console.log('Result ' + result);
-      currentCalculation.push(result);
-      this.setState({
-        current_item: result,
-        current_calculation: currentCalculation
-      });
+      result = this.reduceOperator(result, '*');
+      console.log('Result after multiplications:' + result);
     }
 
     // calculate the divisions
+    if (result.includes('/')) {
+      result = this.reduceOperator(result, '/');
+      console.log('Result after divisions:' + result);
+    }
+
     // calculate the additions
+    if (result.includes('+')) {
+      result = this.reduceOperator(result, '+');
+      console.log('Result after additions:' + result);
+    }
+
     // calculate the subtractions
+    if (result.includes('-')) {
+      result = this.reduceOperator(result, '-');
+      console.log('Result after subtractions:' + result);
+    }
+
+    currentCalculation = this.addOperator(currentCalculation, '=');
+    currentCalculation.push(result);
+
+    this.setState({
+      current_item: result,
+      current_calculation: currentCalculation
+    });
   };
 
   /* When the AC has been clicked */
