@@ -65,7 +65,9 @@ const keypad = props => {
           0
         </td>
         <td className="key">.</td>
-        <td className="key">=</td>
+        <td id="equals" className="key">
+          =
+        </td>
       </tr>
     </Aux>
   );
