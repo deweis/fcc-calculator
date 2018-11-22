@@ -4,6 +4,7 @@ import Display from './components/display';
 import KeyPad from './components/keypad';
 
 /*
+  - Create a recursive function to handle one operator and update the current_calculation for all appearances of that operator
   - ID user stories - Ids
   - Add Calculation functionality (final calculation and calculation upon partial results)
   - Add Decimal functionality
@@ -48,20 +49,97 @@ class App extends Component {
     });
   };
 
-  /* When a operator has been clicked */
-  operatorClickHandler = operator => {
-    let current_calculation = [...this.state.current_calculation];
+  /* Helper function to add an operator to the calculation */
+  updateCalculation = (calculation, operator) => {
     // first operator typed
     if (typeof this.state.current_item === 'number') {
-      current_calculation.push(operator);
+      calculation.push(operator);
+      return calculation;
       // another operator typed - replaces the first operator
     } else if (typeof this.state.current_item === 'string') {
-      current_calculation.splice(current_calculation.length - 1, 1, operator);
+      calculation.splice(calculation.length - 1, 1, operator);
+      return calculation;
     }
+  };
+
+  /* When a operator has been clicked */
+  operatorClickHandler = operator => {
+    // first a number has to be typed before an operator can be used
+    // if there is an = already in the calculation quit (temp restriction)
+    if (
+      this.state.current_calculation.length === 0 ||
+      this.state.current_calculation.includes('=')
+    ) {
+      return;
+    }
+
+    let current_calculation = [...this.state.current_calculation];
+    current_calculation = this.updateCalculation(current_calculation, operator);
+
     this.setState({
       current_item: operator,
       current_calculation: current_calculation
     });
+  };
+
+  /* Helper function to do a basic calculation */
+  calculateIt = (num1, operator, num2) => {
+    let result;
+    switch (operator) {
+      case '*':
+        result = num1 * num2;
+        break;
+      case '/':
+        result = num1 / num2;
+        break;
+      case '+':
+        result = num1 + num2;
+        break;
+      default:
+        result = num1 - num2;
+    }
+    return result;
+  };
+
+  /* When the equal sign has been clicked */
+  resultClickHandler = () => {
+    // first a number has to be typed before an operator can be used
+    // if there is an = already in the calculation quit (temp restriction)
+    if (
+      this.state.current_calculation.length === 0 ||
+      this.state.current_calculation.includes('=')
+    ) {
+      return;
+    }
+
+    let current_calculation = [...this.state.current_calculation];
+    let result = [...current_calculation];
+
+    current_calculation = this.updateCalculation(current_calculation, '=');
+
+    console.log('Current Calculation', current_calculation);
+    console.log('Result', result);
+
+    // calculate a multiplication
+    if (result.includes('*')) {
+      let calcTmp = result.slice(
+        result.indexOf('*') - 1,
+        result.indexOf('*') + 2
+      );
+      let resultTmp = this.calculateIt(calcTmp[0], calcTmp[1], calcTmp[2]);
+      console.log('Result: ' + resultTmp);
+      result.splice(result.indexOf('*') - 1, 3, resultTmp);
+      console.log('Result ' + result);
+      current_calculation.push(result);
+      this.setState({
+        current_item: result,
+        current_calculation: current_calculation
+      });
+    }
+
+    // calculate the divisions
+    // calculate the additions
+    // calculate the subtractions
   };
 
   /* When the AC has been clicked */
@@ -100,6 +178,7 @@ class App extends Component {
               <KeyPad
                 numberClicked={this.numberClickHandler}
                 operatorClicked={this.operatorClickHandler}
+                resultClicked={this.resultClickHandler}
                 acClicked={this.acClickHandler}
                 ceClicked={this.ceClickHandler}
               />
