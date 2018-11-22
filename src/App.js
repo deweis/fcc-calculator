@@ -72,9 +72,11 @@ class App extends Component {
   /* When the CE has been clicked */
   ceClickHandler = () => {
     let current_calculation = [...this.state.current_calculation];
+    // if only a number has been added so far
     if (current_calculation.length === 1) {
       this.setState({ current_item: 0, current_calculation: [] });
     } else if (
+      // only clear when the last item in the calculation is a number. If it is an operator, then do nothing
       typeof current_calculation[current_calculation.length - 1] === 'number'
     ) {
       current_calculation.pop();
