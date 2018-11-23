@@ -12,11 +12,13 @@ const display = props => {
   return (
     <Aux>
       <tr>
-        <th colSpan="4" id="display" className="display">
+        <th colSpan="4" className="display">
           <p className="display-main" style={styles}>
             {props.currentCalculation.join(' ')}
           </p>
-          <p className="display-calc">{props.currentItem}</p>
+          <p className="display-calc" id="display">
+            {props.currentItem}
+          </p>
         </th>
       </tr>
     </Aux>
