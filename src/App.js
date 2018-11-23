@@ -36,6 +36,10 @@ class App extends Component {
     } else if (typeof this.state.current_item === 'string') {
       currentItem = number;
       currentCalculation.push(number);
+      // first number after a calculation (I.e. a result has been calculated)
+    } else if (currentCalculation.includes('=')) {
+      currentItem = number;
+      currentCalculation = [number];
     }
 
     this.setState({
@@ -59,17 +63,18 @@ class App extends Component {
 
   /* When a operator has been clicked */
   operatorClickHandler = operator => {
-    // first a number has to be typed before an operator can be used
-    // if there is an = already in the calculation quit (temp restriction)
-    if (
-      this.state.current_calculation.length === 0 ||
-      this.state.current_calculation.includes('=')
-    ) {
-      return;
-    }
-
     let currentCalculation = [...this.state.current_calculation];
-    currentCalculation = this.addOperator(currentCalculation, operator);
+
+    // first a number has to be typed before an operator can be used
+    if (this.state.current_calculation.length === 0) {
+      return;
+      // if there is an = already in the calculation start a new calculation that operates on the result of the previous evaluation.
+    } else if (this.state.current_calculation.includes('=')) {
+      currentCalculation = currentCalculation.pop();
+      currentCalculation.push(operator);
+    } else {
+      currentCalculation = this.addOperator(currentCalculation, operator);
+    }
 
     this.setState({
       current_item: operator,
