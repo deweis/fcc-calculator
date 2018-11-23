@@ -13,7 +13,11 @@ const keypad = props => {
           CE
         </td>
         <td className="key" />
-        <td className="key" onClick={() => props.operatorClicked('*')}>
+        <td
+          id="multiply"
+          className="key"
+          onClick={() => props.operatorClicked('*')}
+        >
           *
         </td>
       </tr>
@@ -27,7 +31,11 @@ const keypad = props => {
         <td id="nine" className="key" onClick={() => props.numberClicked(9)}>
           9
         </td>
-        <td className="key" onClick={() => props.operatorClicked('/')}>
+        <td
+          id="divide"
+          className="key"
+          onClick={() => props.operatorClicked('/')}
+        >
           /
         </td>
       </tr>
@@ -41,7 +49,7 @@ const keypad = props => {
         <td id="six" className="key" onClick={() => props.numberClicked(6)}>
           6
         </td>
-        <td className="key" onClick={() => props.operatorClicked('+')}>
+        <td id="add" className="key" onClick={() => props.operatorClicked('+')}>
           +
         </td>
       </tr>
@@ -55,7 +63,11 @@ const keypad = props => {
         <td id="three" className="key" onClick={() => props.numberClicked(3)}>
           3
         </td>
-        <td className="key" onClick={() => props.operatorClicked('-')}>
+        <td
+          id="subtract"
+          className="key"
+          onClick={() => props.operatorClicked('-')}
+        >
           -
         </td>
       </tr>
