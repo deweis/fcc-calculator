@@ -5,11 +5,8 @@ import KeyPad from './components/keypad';
 
 /*
   - ID user stories - Ids
-  - Add Calculation functionality (final calculation and calculation upon partial results)
-  - Add Decimal functionality
-  - Fix too long enterings widen the calculator
+  - Fix: 0.8 + 0.4 = 1.2000000000000002
 */
-
 class App extends Component {
   state = {
     current_item: 0,
@@ -34,8 +31,17 @@ class App extends Component {
       currentCalculation.splice(currentCalculation.length - 1, 1, currentItem);
       // first number after an operator
     } else if (typeof this.state.current_item === 'string') {
-      currentItem = number;
-      currentCalculation.push(number);
+      if (currentItem.split('').includes('.')) {
+        currentItem = currentItem + number;
+        currentCalculation.splice(
+          currentCalculation.length - 1,
+          1,
+          currentItem
+        );
+      } else {
+        currentItem = number;
+        currentCalculation.push(number);
+      }
       // first number after a calculation (I.e. a result has been calculated)
     } else if (currentCalculation.includes('=')) {
       currentItem = number;
@@ -48,14 +54,60 @@ class App extends Component {
     });
   };
 
+  /* Helper function to evaluate if an item is an operator */
+  isOperator = item => {
+    return item === '+' || item === '-' || item === '*' || item === '/';
+  };
+
+  /* When decimal point has been clicked */
+  decimalClickHandler = () => {
+    let currentCalculation = [...this.state.current_calculation];
+    let currentItem = this.state.current_item;
+    if (
+      // current item is an operator?
+      this.isOperator(currentItem)
+    ) {
+      currentItem = '0.';
+      currentCalculation.push(currentItem);
+      this.setState({
+        current_item: currentItem,
+        current_calculation: currentCalculation
+      });
+    } else if (currentCalculation.includes('=')) {
+      currentItem = '0.';
+      currentCalculation = [currentItem];
+      this.setState({
+        current_item: currentItem,
+        current_calculation: currentCalculation
+      });
+    } else if (
+      // is there already a decimal point in the number?
+      !String(currentItem)
+        .split('')
+        .includes('.')
+    ) {
+      currentItem = currentItem + '.';
+      currentCalculation.splice(currentCalculation.length - 1, 1, currentItem);
+      this.setState({
+        current_item: currentItem,
+        current_calculation: currentCalculation
+      });
+    }
+  };
+
   /* Helper function to add an operator to the calculation */
   addOperator = (calculation, operator) => {
     // first operator typed
-    if (typeof this.state.current_item === 'number') {
+    if (
+      typeof this.state.current_item === 'number' ||
+      String(this.state.current_item)
+        .split('')
+        .includes('.')
+    ) {
       calculation.push(operator);
       return calculation;
       // another operator typed - replaces the first operator
-    } else if (typeof this.state.current_item === 'string') {
+    } else if (this.isOperator(this.state.current_item)) {
       calculation.splice(calculation.length - 1, 1, operator);
       return calculation;
     }
@@ -66,11 +118,14 @@ class App extends Component {
     let currentCalculation = [...this.state.current_calculation];
 
     // first a number has to be typed before an operator can be used
-    if (this.state.current_calculation.length === 0) {
+    if (
+      this.state.current_calculation.length === 0 ||
+      this.state.current_item === '0.'
+    ) {
       return;
       // if there is an = already in the calculation start a new calculation that operates on the result of the previous evaluation.
     } else if (this.state.current_calculation.includes('=')) {
-      currentCalculation = currentCalculation.pop();
+      currentCalculation = [currentCalculation.pop()];
       currentCalculation.push(operator);
     } else {
       currentCalculation = this.addOperator(currentCalculation, operator);
@@ -111,7 +166,11 @@ class App extends Component {
       );
 
       // Calculate this operation
-      let resultTmp = this.calculate(calcTmp[0], calcTmp[1], calcTmp[2]);
+      let resultTmp = this.calculate(
+        Number(calcTmp[0]),
+        calcTmp[1],
+        Number(calcTmp[2])
+      );
 
       // Add the result to the main calculation
       calculation.splice(calculation.indexOf(operator) - 1, 3, resultTmp);
@@ -130,7 +189,9 @@ class App extends Component {
     // if there is an = already in the calculation quit (temp restriction)
     if (
       this.state.current_calculation.length === 0 ||
-      this.state.current_calculation.includes('=')
+      this.state.current_calculation.includes('=') ||
+      this.state.current_item === '0.' ||
+      this.isOperator(this.state.current_item)
     ) {
       return;
     }
@@ -163,10 +224,10 @@ class App extends Component {
     }
 
     currentCalculation = this.addOperator(currentCalculation, '=');
-    currentCalculation.push(result);
+    currentCalculation.push(Number(result));
 
     this.setState({
-      current_item: result,
+      current_item: Number(result),
       current_calculation: currentCalculation
     });
   };
@@ -206,6 +267,7 @@ class App extends Component {
               />
               <KeyPad
                 numberClicked={this.numberClickHandler}
+                decimalClicked={this.decimalClickHandler}
                 operatorClicked={this.operatorClickHandler}
                 resultClicked={this.resultClickHandler}
                 acClicked={this.acClickHandler}
