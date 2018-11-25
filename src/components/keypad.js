@@ -76,7 +76,9 @@ const keypad = props => {
         <td id="zero" className="key" onClick={() => props.numberClicked(0)}>
           0
         </td>
-        <td className="key">.</td>
+        <td id="decimal" className="key">
+          .
+        </td>
         <td id="equals" className="key" onClick={() => props.resultClicked()}>
           =
         </td>
