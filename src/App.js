@@ -6,6 +6,8 @@ import KeyPad from './components/keypad';
 /*
   - ID user stories - Ids
   - Fix: 0.8 + 0.4 = 1.2000000000000002
+  - Fix: 3.3 - 0.2 = 3.0999999999999996
+  - Fix: can click CE after having clicked the equals..
 */
 class App extends Component {
   state = {
@@ -156,27 +158,32 @@ class App extends Component {
     return result;
   };
 
-  /* Helper function (recursive) to calculate all operations for one operator */
-  reduceOperator = (calculation, operator) => {
-    if (calculation.includes(operator)) {
-      // Extract a single calculation for the operator
-      let calcTmp = calculation.slice(
-        calculation.indexOf(operator) - 1,
-        calculation.indexOf(operator) + 2
-      );
+  /* Helper function (recursive) to calculate operations for [*, /] resp. [+, -] */
+  reduceOperators = (calculation, operators) => {
+    if (
+      calculation.includes(operators[0]) ||
+      calculation.includes(operators[1])
+    ) {
+      // look for min index of one of the two operators
+      let arrIndexes = [
+        calculation.indexOf(operators[0]),
+        calculation.indexOf(operators[1])
+      ];
+      arrIndexes = arrIndexes.filter(x => x > 0); // remove -1's
+      const minIndex = Math.min(...arrIndexes);
 
-      // Calculate this operation
+      // calculate that subset
       let resultTmp = this.calculate(
-        Number(calcTmp[0]),
-        calcTmp[1],
-        Number(calcTmp[2])
+        Number(calculation[minIndex - 1]),
+        calculation[minIndex],
+        Number(calculation[minIndex + 1])
       );
 
       // Add the result to the main calculation
-      calculation.splice(calculation.indexOf(operator) - 1, 3, resultTmp);
+      calculation.splice(minIndex - 1, 3, resultTmp);
 
-      // Look out for the next appearance of that operator
-      this.reduceOperator(calculation, operator);
+      // Look out for the next appearance of these operators
+      this.reduceOperators(calculation, operators);
     } else {
       return calculation;
     }
@@ -185,13 +192,11 @@ class App extends Component {
 
   /* When the equal sign has been clicked */
   resultClickHandler = () => {
-    // first a number has to be typed before an operator can be used
-    // if there is an = already in the calculation quit (temp restriction)
     if (
-      this.state.current_calculation.length === 0 ||
-      this.state.current_calculation.includes('=') ||
-      this.state.current_item === '0.' ||
-      this.isOperator(this.state.current_item)
+      this.state.current_calculation.length === 0 || // first a number has to be typed before an operator can be used
+      this.state.current_calculation.includes('=') || // if there is an = already in the calculation quit (temp restriction)
+      this.state.current_item === '0.' || // needs some more decimal items to proceed first
+      this.isOperator(this.state.current_item) // cannot get a
     ) {
       return;
     }
@@ -199,28 +204,16 @@ class App extends Component {
     let currentCalculation = [...this.state.current_calculation];
     let result = [...currentCalculation];
 
-    // calculate the multiplications
-    if (result.includes('*')) {
-      result = this.reduceOperator(result, '*');
-      console.log('Result after multiplications:' + result);
+    // calculate the multiplications/divisions
+    if (result.includes('*') || result.includes('/')) {
+      result = this.reduceOperators(result, ['*', '/']);
+      console.log('Result after multiplications & divisions: ' + result);
     }
 
-    // calculate the divisions
-    if (result.includes('/')) {
-      result = this.reduceOperator(result, '/');
-      console.log('Result after divisions:' + result);
-    }
-
-    // calculate the additions
-    if (result.includes('+')) {
-      result = this.reduceOperator(result, '+');
-      console.log('Result after additions:' + result);
-    }
-
-    // calculate the subtractions
-    if (result.includes('-')) {
-      result = this.reduceOperator(result, '-');
-      console.log('Result after subtractions:' + result);
+    // calculate the additions/subtractions
+    if (result.includes('+') || result.includes('-')) {
+      result = this.reduceOperators(result, ['+', '-']);
+      console.log('Result after additions & subtractions: ' + result);
     }
 
     currentCalculation = this.addOperator(currentCalculation, '=');
