@@ -7,8 +7,6 @@ import KeyPad from './components/keypad';
   - ID user stories - Ids
   - Fix: 0.8 + 0.4 = 1.2000000000000002
   - Fix: 3.3 - 0.2 = 3.0999999999999996
-  - Fix: can click CE after having clicked the equals..
-  - Fix: can add number to result
 */
 class App extends Component {
   state = {
@@ -194,6 +192,7 @@ class App extends Component {
 
   /* When the equal sign has been clicked */
   resultClickHandler = () => {
+    console.log('To calculate: ' + this.state.current_calculation);
     if (
       this.state.current_calculation.length === 0 || // first a number has to be typed before an operator can be used
       this.state.current_calculation.includes('=') || // if there is an = already in the calculation quit (temp restriction)
@@ -239,8 +238,10 @@ class App extends Component {
     if (currentCalculation.length === 1) {
       this.setState({ current_item: 0, current_calculation: [] });
     } else if (
-      // only clear when the last item in the calculation is a number. If it is an operator, then do nothing
-      typeof currentCalculation[currentCalculation.length - 1] === 'number'
+      /* only clear when the last item in the calculation is a number.
+         - If it is an operator or a result of a previous calculation; then do nothing */
+      typeof currentCalculation[currentCalculation.length - 1] === 'number' &&
+      !currentCalculation.includes('=')
     ) {
       currentCalculation.pop();
       this.setState({
