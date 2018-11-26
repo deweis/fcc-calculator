@@ -8,6 +8,7 @@ import KeyPad from './components/keypad';
   - Fix: 0.8 + 0.4 = 1.2000000000000002
   - Fix: 3.3 - 0.2 = 3.0999999999999996
   - Fix: can click CE after having clicked the equals..
+  - Fix: can add number to result
 */
 class App extends Component {
   state = {
@@ -20,8 +21,13 @@ class App extends Component {
     let currentCalculation = [...this.state.current_calculation];
     let currentItem = this.state.current_item;
 
+    // first number after a calculation (I.e. a result has been calculated)
+    if (currentCalculation.includes('=')) {
+      currentItem = number;
+      currentCalculation = [number];
+    }
     // first number or an additional number after another number has been typed
-    if (typeof this.state.current_item === 'number') {
+    else if (typeof this.state.current_item === 'number') {
       let arr =
         this.state.current_item === 0 && number === 0
           ? [0] // can't type more than one zero at the beginning of a number
@@ -44,10 +50,6 @@ class App extends Component {
         currentItem = number;
         currentCalculation.push(number);
       }
-      // first number after a calculation (I.e. a result has been calculated)
-    } else if (currentCalculation.includes('=')) {
-      currentItem = number;
-      currentCalculation = [number];
     }
 
     this.setState({
