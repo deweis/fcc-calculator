@@ -72,7 +72,9 @@ const keypad = props => {
         </td>
       </tr>
       <tr>
-        <td className="key">-</td>
+        <td className="key" onClick={() => props.negateClicked()}>
+          -
+        </td>
         <td id="zero" className="key" onClick={() => props.numberClicked(0)}>
           0
         </td>

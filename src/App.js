@@ -7,6 +7,7 @@ import KeyPad from './components/keypad';
   - ID user stories - Ids
   - Fix: 0.8 + 0.4 = 1.2000000000000002
   - Fix: 3.3 - 0.2 = 3.0999999999999996
+  - handle CE on decimals
 */
 class App extends Component {
   state = {
@@ -34,7 +35,7 @@ class App extends Component {
 
       currentItem = Number(arr.join(''));
       currentCalculation.splice(currentCalculation.length - 1, 1, currentItem);
-      // first number after an operator
+      // first number after an operator or decimal point
     } else if (typeof this.state.current_item === 'string') {
       if (currentItem.split('').includes('.')) {
         currentItem = currentItem + number;
@@ -58,6 +59,43 @@ class App extends Component {
   /* Helper function to evaluate if an item is an operator */
   isOperator = item => {
     return item === '+' || item === '-' || item === '*' || item === '/';
+  };
+
+  /* When the negate button has been clicked */
+  negateClickHandler = () => {
+    let currentCalculation = [...this.state.current_calculation];
+    let currentItem = this.state.current_item;
+
+    // handle negate on numbers
+    if (typeof currentItem === 'number' && currentItem !== 0) {
+      currentItem *= -1;
+      if (currentCalculation.includes('=')) {
+        currentCalculation = [currentItem];
+      } else {
+        currentCalculation.splice(
+          currentCalculation.length - 1,
+          1,
+          currentItem
+        );
+      }
+      this.setState({
+        current_item: currentItem,
+        current_calculation: currentCalculation
+      });
+    }
+    // handle negate on decimals
+    else if (
+      typeof currentItem === 'string' &&
+      currentItem.includes('.') &&
+      Number(currentItem) !== 0
+    ) {
+      currentItem *= -1;
+      currentCalculation.splice(currentCalculation.length - 1, 1, currentItem);
+      this.setState({
+        current_item: currentItem,
+        current_calculation: currentCalculation
+      });
+    }
   };
 
   /* When decimal point has been clicked */
@@ -262,6 +300,7 @@ class App extends Component {
               />
               <KeyPad
                 numberClicked={this.numberClickHandler}
+                negateClicked={this.negateClickHandler}
                 decimalClicked={this.decimalClickHandler}
                 operatorClicked={this.operatorClickHandler}
                 resultClicked={this.resultClickHandler}
