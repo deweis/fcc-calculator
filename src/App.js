@@ -21,8 +21,7 @@ class App extends Component {
 
     // first number after a calculation (I.e. a result has been calculated)
     if (currentCalculation.includes('=')) {
-      currentItem = number;
-      currentCalculation = [number];
+      return;
     }
     // first number or an additional number after another number has been typed
     else if (typeof this.state.current_item === 'number') {
