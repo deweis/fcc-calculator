@@ -7,7 +7,6 @@ import KeyPad from './components/keypad';
   - ID user stories - Ids
   - Fix: 0.8 + 0.4 = 1.2000000000000002
   - Fix: 3.3 - 0.2 = 3.0999999999999996
-  - handle CE on decimals
 */
 class App extends Component {
   state = {
@@ -35,8 +34,8 @@ class App extends Component {
 
       currentItem = Number(arr.join(''));
       currentCalculation.splice(currentCalculation.length - 1, 1, currentItem);
-      // first number after an operator or decimal point
-    } else if (typeof this.state.current_item === 'string') {
+    } // first number after an operator or decimal point
+    else if (typeof this.state.current_item === 'string') {
       if (currentItem.split('').includes('.')) {
         currentItem = currentItem + number;
         currentCalculation.splice(
@@ -271,14 +270,16 @@ class App extends Component {
   /* When the CE has been clicked */
   ceClickHandler = () => {
     let currentCalculation = [...this.state.current_calculation];
+    let currentItem = this.state.current_item;
     // if only a number has been added so far
     if (currentCalculation.length === 1) {
       this.setState({ current_item: 0, current_calculation: [] });
     } else if (
-      /* only clear when the last item in the calculation is a number.
+      /* only clear when the last item in the calculation is a number (resp. a decimal)
          - If it is an operator or a result of a previous calculation; then do nothing */
-      typeof currentCalculation[currentCalculation.length - 1] === 'number' &&
-      !currentCalculation.includes('=')
+      (typeof currentCalculation[currentCalculation.length - 1] === 'number' &&
+        !currentCalculation.includes('=')) ||
+      (typeof currentItem === 'string' && currentItem.includes('.'))
     ) {
       currentCalculation.pop();
       this.setState({
