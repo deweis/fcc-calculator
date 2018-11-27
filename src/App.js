@@ -3,11 +3,6 @@ import './App.css';
 import Display from './components/display';
 import KeyPad from './components/keypad';
 
-/*
-  - ID user stories - Ids
-  - Fix: 0.8 + 0.4 = 1.2000000000000002
-  - Fix: 3.3 - 0.2 = 3.0999999999999996
-*/
 class App extends Component {
   state = {
     current_item: 0,
@@ -177,19 +172,34 @@ class App extends Component {
 
   /* Helper function to do a basic calculation */
   calculate = (num1, operator, num2) => {
+    const fixtheJSDecimalMathIssue = 10000000000000000;
     let result;
     switch (operator) {
       case '*':
-        result = num1 * num2;
+        //result = num1 * num2;
+        result =
+          Math.round(num1 * num2 * fixtheJSDecimalMathIssue) /
+          fixtheJSDecimalMathIssue;
         break;
       case '/':
-        result = num1 / num2;
+        //result = num1 / num2;
+        result =
+          Math.round((num1 / num2) * fixtheJSDecimalMathIssue) /
+          fixtheJSDecimalMathIssue;
         break;
       case '+':
-        result = num1 + num2;
+        //result = num1 + num2;
+        result =
+          Math.round(
+            num1 * fixtheJSDecimalMathIssue + num2 * fixtheJSDecimalMathIssue
+          ) / fixtheJSDecimalMathIssue;
         break;
       default:
-        result = num1 - num2;
+        //result = num1 - num2;
+        result =
+          Math.round(
+            num1 * fixtheJSDecimalMathIssue - num2 * fixtheJSDecimalMathIssue
+          ) / fixtheJSDecimalMathIssue;
     }
     return result;
   };
