@@ -2,7 +2,7 @@ import React from 'react';
 import Aux from '../hoc/Aux_/Aux_';
 import './keypad.css';
 
-const keypad = props => {
+const Keypad = props => {
   return (
     <Aux>
       <tr>
@@ -89,4 +89,4 @@ const keypad = props => {
   );
 };
 
-export default keypad;
+export default Keypad;

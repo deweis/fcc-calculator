@@ -2,7 +2,7 @@ import React from 'react';
 import Aux from '../hoc/Aux_/Aux_';
 import './display.css';
 
-const display = props => {
+const Display = props => {
   /* Make the font-size smaller the longer the calculation gets to stay within the display size */
   const calcLength = props.currentCalculation.join(' ').length;
   const fontSizes =
@@ -25,4 +25,4 @@ const display = props => {
   );
 };
 
-export default display;
+export default Display;
