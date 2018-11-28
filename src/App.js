@@ -238,7 +238,7 @@ class App extends Component {
 
   /* When the equal sign has been clicked */
   resultClickHandler = () => {
-    console.log('To calculate: ' + this.state.current_calculation);
+    //console.log('To calculate: ' + this.state.current_calculation);
     if (
       this.state.current_calculation.length === 0 || // first a number has to be typed before an operator can be used
       this.state.current_calculation.includes('=') || // if there is an = already in the calculation quit (temp restriction)
@@ -254,13 +254,13 @@ class App extends Component {
     // calculate the multiplications/divisions
     if (result.includes('*') || result.includes('/')) {
       result = this.reduceOperators(result, ['*', '/']);
-      console.log('Result after multiplications & divisions: ' + result);
+      //console.log('Result after multiplications & divisions: ' + result);
     }
 
     // calculate the additions/subtractions
     if (result.includes('+') || result.includes('-')) {
       result = this.reduceOperators(result, ['+', '-']);
-      console.log('Result after additions & subtractions: ' + result);
+      //console.log('Result after additions & subtractions: ' + result);
     }
 
     currentCalculation = this.addOperator(currentCalculation, '=');
